@@ -2,7 +2,7 @@
 import { Typography, Box, Button } from "@mui/material";
 import { useState } from "react";
 import MainContainer from "@/components/MainContainer";
-import RegistrationModal from "@/components/RegistrationModal";
+import ReceiverRegistrationModal from "@/components/ReceiverRegistrationModal";
 
 export default function RegisterNGOPage() {
   const [registrationModalOpen, setRegistrationModalOpen] = useState(false);
@@ -49,8 +49,8 @@ export default function RegisterNGOPage() {
         </Button>
       </Box>
 
-      {/* Registration Modal */}
-      <RegistrationModal 
+      {/* Receiver Registration Modal */}
+      <ReceiverRegistrationModal 
         open={registrationModalOpen}
         onClose={() => setRegistrationModalOpen(false)}
         onBackToLogin={() => setRegistrationModalOpen(false)}

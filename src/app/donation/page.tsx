@@ -2,7 +2,7 @@
 import { Typography, Box, Button } from "@mui/material";
 import { useState } from "react";
 import MainContainer from "@/components/MainContainer";
-import RegistrationModal from "@/components/RegistrationModal";
+import DonorRegistrationModal from "@/components/DonorRegistrationModal";
 
 export default function DonationPage() {
   const [registrationModalOpen, setRegistrationModalOpen] = useState(false);
@@ -49,8 +49,8 @@ export default function DonationPage() {
         </Button>
       </Box>
 
-      {/* Registration Modal */}
-      <RegistrationModal 
+      {/* Donor Registration Modal */}
+      <DonorRegistrationModal 
         open={registrationModalOpen}
         onClose={() => setRegistrationModalOpen(false)}
         onBackToLogin={() => setRegistrationModalOpen(false)}
