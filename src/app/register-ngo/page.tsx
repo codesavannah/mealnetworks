@@ -8,6 +8,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import MainContainer from "@/components/MainContainer";
+import RegistrationModal from "@/components/RegistrationModal";
 
 const ngoSchema = z.object({
   // Organization Information
@@ -57,6 +58,7 @@ export default function RegisterNGOPage() {
   const [selectedServiceAreas, setSelectedServiceAreas] = useState<string[]>([]);
   const [selectedDonationTypes, setSelectedDonationTypes] = useState<string[]>([]);
   const [submitStatus, setSubmitStatus] = useState<string | null>(null);
+  const [registrationModalOpen, setRegistrationModalOpen] = useState(false);
   
   const { control, handleSubmit, formState: { errors }, setValue, reset } = useForm<NGOFormData>({
     resolver: zodResolver(ngoSchema),
@@ -96,9 +98,32 @@ export default function RegisterNGOPage() {
 
   return (
     <MainContainer>
-      <Typography variant="h3" gutterBottom>
-        Register Your NGO / Ashram
-      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography variant="h3" gutterBottom>
+          Register Your NGO / Ashram
+        </Typography>
+        
+        {/* Apply for Receiver Button */}
+        <Button
+          variant="contained"
+          color="secondary"
+          size="large"
+          onClick={() => setRegistrationModalOpen(true)}
+          sx={{ 
+            px: 3, 
+            py: 1.5,
+            fontSize: '1rem',
+            fontWeight: 600,
+            borderRadius: 2,
+            boxShadow: 2,
+            '&:hover': {
+              boxShadow: 4
+            }
+          }}
+        >
+          Apply for Receiver
+        </Button>
+      </Box>
       
       <Paper sx={{ p: 4, mt: 2 }}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -560,6 +585,13 @@ export default function RegisterNGOPage() {
           </form>
         </LocalizationProvider>
       </Paper>
+
+      {/* Registration Modal */}
+      <RegistrationModal 
+        open={registrationModalOpen}
+        onClose={() => setRegistrationModalOpen(false)}
+        onBackToLogin={() => setRegistrationModalOpen(false)}
+      />
     </MainContainer>
   );
 }
