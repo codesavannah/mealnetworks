@@ -3,9 +3,11 @@ import { Typography, Box, Button } from "@mui/material";
 import { useState } from "react";
 import MainContainer from "@/components/MainContainer";
 import ReceiverRegistrationModal from "@/components/ReceiverRegistrationModal";
+import LoginModal from "@/components/LoginModal";
 
 export default function RegisterNGOPage() {
   const [registrationModalOpen, setRegistrationModalOpen] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
 
   return (
     <MainContainer>
@@ -21,7 +23,7 @@ export default function RegisterNGOPage() {
         }}
       >
         <Typography variant="h2" sx={{ fontWeight: 700, color: 'primary.main' }}>
-          Register Your NGO / Ashram
+          Register Your NGO
         </Typography>
         
         <Typography variant="h6" color="text.secondary" sx={{ maxWidth: '600px' }}>
@@ -53,7 +55,20 @@ export default function RegisterNGOPage() {
       <ReceiverRegistrationModal 
         open={registrationModalOpen}
         onClose={() => setRegistrationModalOpen(false)}
-        onBackToLogin={() => setRegistrationModalOpen(false)}
+        onBackToLogin={() => {
+          setRegistrationModalOpen(false);
+          setLoginModalOpen(true);
+        }}
+      />
+
+      {/* Login Modal */}
+      <LoginModal 
+        open={loginModalOpen}
+        onClose={() => setLoginModalOpen(false)}
+        onRegisterClick={() => {
+          setLoginModalOpen(false);
+          setRegistrationModalOpen(true);
+        }}
       />
     </MainContainer>
   );
