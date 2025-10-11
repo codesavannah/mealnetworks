@@ -11,11 +11,7 @@ import {
   Alert,
   CircularProgress,
   IconButton,
-  Grid,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem
+  Grid
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -94,7 +90,7 @@ export default function RegistrationModal({ open, onClose, onBackToLogin }: Regi
         handleClose();
       }, 3000);
 
-    } catch (error) {
+    } catch {
       setError('Network error. Please try again.');
     } finally {
       setLoading(false);

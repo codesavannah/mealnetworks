@@ -43,7 +43,7 @@ export default function AdminDashboard() {
       }
       const data = await response.json();
       setUsers(data.users || []);
-    } catch (error) {
+    } catch {
       setError('Failed to load users');
     } finally {
       setLoading(false);
@@ -66,7 +66,7 @@ export default function AdminDashboard() {
 
       // Refresh users list
       fetchUsers();
-    } catch (error) {
+    } catch {
       setError('Failed to update user');
     }
   };

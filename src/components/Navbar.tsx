@@ -43,7 +43,7 @@ export default function Navbar() {
         const data = await response.json();
         setUser(data.user);
       }
-    } catch (error) {
+    } catch {
       // User not authenticated
       setUser(null);
     }

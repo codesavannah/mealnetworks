@@ -53,7 +53,7 @@ export default function LoginModal({ open, onClose }: LoginModalProps) {
       onClose();
       window.location.reload();
 
-    } catch (error) {
+    } catch {
       setError('Network error. Please try again.');
     } finally {
       setLoading(false);
