@@ -49,9 +49,19 @@ export default function LoginModal({ open, onClose }: LoginModalProps) {
         return;
       }
 
-      // Success - close modal and refresh page
+      // Success - redirect to appropriate dashboard based on role
       onClose();
-      window.location.reload();
+      const userRole = data.user?.role;
+      
+      if (userRole === 'SUPERADMIN') {
+        window.location.href = '/admin';
+      } else if (userRole === 'DONOR') {
+        window.location.href = '/donor';
+      } else if (userRole === 'RECEIVER') {
+        window.location.href = '/receiver';
+      } else {
+        window.location.href = '/';
+      }
 
     } catch {
       setError('Network error. Please try again.');
