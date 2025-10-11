@@ -136,7 +136,7 @@ export default function AdminDashboard() {
                     <Chip 
                       label={user.status} 
                       size="small"
-                      color={getStatusColor(user.status) as any}
+                      color={getStatusColor(user.status) as 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning'}
                     />
                   </TableCell>
                   <TableCell>

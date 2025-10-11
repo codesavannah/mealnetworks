@@ -153,7 +153,7 @@ export default function LoginModal({ open, onClose }: LoginModalProps) {
 
             <Box sx={{ textAlign: 'center', mt: 2 }}>
               <Typography variant="body2" color="text.secondary">
-                Don't have an account?{' '}
+                Don&apos;t have an account?{' '}
                 <Link
                   component="button"
                   type="button"

@@ -44,7 +44,7 @@ export default function RegistrationModal({ open, onClose, onBackToLogin }: Regi
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const handleChange = (field: string) => (e: any) => {
+  const handleChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({
       ...prev,
       [field]: e.target.value

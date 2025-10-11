@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '../../../lib/prisma';
-import { hashPassword, generateToken } from '../../../lib/auth';
-import { UserRole } from '../../../generated/prisma';
+import { prisma } from '../../../../lib/prisma';
+import { hashPassword, generateToken } from '../../../../lib/auth';
+import { UserRole } from '@prisma/client';
 
 export async function POST(request: NextRequest) {
   try {

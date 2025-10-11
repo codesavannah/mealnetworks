@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { prisma } from './prisma';
-import { UserRole, UserStatus } from '../generated/prisma';
+import { UserRole, UserStatus } from '@prisma/client';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
@@ -42,7 +42,14 @@ export function generateToken(user: AuthUser): string {
 // Verify JWT token
 export function verifyToken(token: string): AuthUser | null {
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as any;
+    const decoded = jwt.verify(token, JWT_SECRET) as jwt.JwtPayload & {
+      id: string;
+      email: string;
+      role: UserRole;
+      status: UserStatus;
+      firstName?: string;
+      lastName?: string;
+    };
     return {
       id: decoded.id,
       email: decoded.email,
@@ -51,7 +58,7 @@ export function verifyToken(token: string): AuthUser | null {
       firstName: decoded.firstName || '',
       lastName: decoded.lastName || ''
     };
-  } catch (error) {
+  } catch {
     return null;
   }
 }

@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -148,4 +147,96 @@ model AdminAction {
   createdAt         DateTime          @default(now())
   
   @@map("admin_actions")
+}
+
+// Contact Messages Model
+model ContactMessage {
+  id                String            @id @default(cuid())
+  name              String
+  email             String
+  phone             String?
+  subject           String
+  message           String
+  
+  createdAt         DateTime          @default(now())
+  
+  @@map("contact_messages")
+}
+
+// Legacy Donation Model (for existing donation form)
+model Donation {
+  id                String            @id @default(cuid())
+  donorName         String
+  phone             String
+  email             String?
+  aadhaarNumber     String?
+  addressLine       String
+  city              String?
+  pincode           String?
+  geoLat            Float?
+  geoLng            Float?
+  foodTypes         String[]
+  numberOfItems     Int?
+  description       String?
+  quantityServings  Int?
+  preparedAt        DateTime?
+  expiresAt         DateTime?
+  preferredPickupSlot String?
+  deliveryPossible  Boolean           @default(false)
+  specialInstructions String?
+  photoUrl          String?
+  safetyConfirmed   Boolean
+  acceptedTerms     Boolean
+  referenceCode     String            @unique
+  
+  createdAt         DateTime          @default(now())
+  
+  @@map("donations")
+}
+
+// Legacy NGO Model (for existing NGO registration)
+model NGO {
+  id                String            @id @default(cuid())
+  name              String
+  registrationNumber String?
+  establishedYear   Int?
+  orgType           String
+  registrationFileUrl String?
+  contactPerson     String
+  contactPhone      String
+  contactEmail      String
+  website           String?
+  addressLine       String
+  city              String?
+  state             String?
+  pincode           String?
+  geoLat            Float?
+  geoLng            Float?
+  serviceAreas      String[]
+  capacityPerDay    Int?
+  preferredDonations String[]
+  idProofUrl        String?
+  logoUrl           String?
+  infoValidityConfirm Boolean
+  acceptedTerms     Boolean
+  ngoCode           String            @unique
+  
+  createdAt         DateTime          @default(now())
+  
+  @@map("ngos")
+}
+
+// Review Model (for user reviews)
+model Review {
+  id                String            @id @default(cuid())
+  name              String
+  email             String?
+  role              String
+  rating            Int
+  reviewText        String
+  isApproved        Boolean           @default(false)
+  
+  createdAt         DateTime          @default(now())
+  
+  @@map("reviews")
 }

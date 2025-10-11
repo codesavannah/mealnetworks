@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "../../../lib/prisma";
 import { z } from "zod";
 import { customAlphabet } from "nanoid";
 
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
         pincode: parsed.pincode || null,
         geoLat: parsed.geoLat,
         geoLng: parsed.geoLng,
-        foodTypes: JSON.stringify(parsed.foodTypes),
+        foodTypes: parsed.foodTypes,
         numberOfItems: parsed.numberOfItems ?? null,
         description: parsed.description || null,
         quantityServings: parsed.quantityServings ?? null,

@@ -2,10 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '../../../../../lib/prisma';
 import { getUserFromRequest, requireRole } from '../../../../../lib/auth';
 import { sendWelcomeEmail, sendAccountStatusEmail } from '../../../../../lib/email';
+import { UserStatus } from '@prisma/client';
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { userId: string } }
+  context: { params: Promise<{ userId: string }> }
 ) {
   try {
     const user = await getUserFromRequest(request);
@@ -18,7 +19,7 @@ export async function PATCH(
     }
 
     const { action } = await request.json();
-    const { userId } = params;
+    const { userId } = await context.params;
 
     if (!['approve', 'reject', 'block', 'enable'].includes(action)) {
       return NextResponse.json(
@@ -55,7 +56,7 @@ export async function PATCH(
       );
     }
 
-    let newStatus;
+    let newStatus: UserStatus;
     let shouldSendEmail = false;
     let emailType: 'APPROVED' | 'BLOCKED' | null = null;
 
@@ -105,6 +106,12 @@ export async function PATCH(
         shouldSendEmail = true;
         emailType = 'APPROVED';
         break;
+      
+      default:
+        return NextResponse.json(
+          { error: 'Invalid action' },
+          { status: 400 }
+        );
     }
 
     // Update user status
