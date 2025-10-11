@@ -157,13 +157,13 @@ export default function RegistrationModal({ open, onClose, onBackToLogin }: Regi
           
           <Grid container spacing={2}>
             {/* Basic Information */}
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
                 Basic Information
               </Typography>
             </Grid>
             
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
                 label="First Name *"
@@ -173,7 +173,7 @@ export default function RegistrationModal({ open, onClose, onBackToLogin }: Regi
               />
             </Grid>
             
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
                 label="Last Name *"
@@ -183,7 +183,7 @@ export default function RegistrationModal({ open, onClose, onBackToLogin }: Regi
               />
             </Grid>
             
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Email Address *"
@@ -194,7 +194,7 @@ export default function RegistrationModal({ open, onClose, onBackToLogin }: Regi
               />
             </Grid>
             
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
                 label="Password *"
@@ -205,7 +205,7 @@ export default function RegistrationModal({ open, onClose, onBackToLogin }: Regi
               />
             </Grid>
             
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
                 label="Confirm Password *"
@@ -217,13 +217,13 @@ export default function RegistrationModal({ open, onClose, onBackToLogin }: Regi
             </Grid>
 
             {/* Contact Information */}
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Typography variant="h6" sx={{ mb: 1, mt: 2, fontWeight: 600 }}>
                 Contact Information
               </Typography>
             </Grid>
             
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
                 label="Phone Number"
@@ -232,7 +232,7 @@ export default function RegistrationModal({ open, onClose, onBackToLogin }: Regi
               />
             </Grid>
             
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
                 label="Aadhaar Number"
@@ -243,13 +243,13 @@ export default function RegistrationModal({ open, onClose, onBackToLogin }: Regi
             </Grid>
 
             {/* Address Information */}
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Typography variant="h6" sx={{ mb: 1, mt: 2, fontWeight: 600 }}>
                 Address Information
               </Typography>
             </Grid>
             
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Address"
@@ -260,7 +260,7 @@ export default function RegistrationModal({ open, onClose, onBackToLogin }: Regi
               />
             </Grid>
             
-            <Grid item xs={12} sm={4}>
+            <Grid size={{ xs: 12, sm: 4 }}>
               <TextField
                 fullWidth
                 label="City"
@@ -269,7 +269,7 @@ export default function RegistrationModal({ open, onClose, onBackToLogin }: Regi
               />
             </Grid>
             
-            <Grid item xs={12} sm={4}>
+            <Grid size={{ xs: 12, sm: 4 }}>
               <TextField
                 fullWidth
                 label="State"
@@ -278,7 +278,7 @@ export default function RegistrationModal({ open, onClose, onBackToLogin }: Regi
               />
             </Grid>
             
-            <Grid item xs={12} sm={4}>
+            <Grid size={{ xs: 12, sm: 4 }}>
               <TextField
                 fullWidth
                 label="PIN Code"

@@ -19,9 +19,9 @@ export async function POST(req: NextRequest) {
         name: parsed.name,
         email: parsed.email || null,
         role: parsed.role,
-        text: parsed.text,
+        reviewText: parsed.text,
         rating: parsed.rating,
-        approved: false,
+        isApproved: false,
       },
     });
     return NextResponse.json({ id: created.id }, { status: 201 });
