@@ -77,7 +77,7 @@ export default function Navbar() {
       await fetch('/api/auth/logout', { method: 'POST' });
       setUser(null);
       setProfileMenuAnchor(null);
-      window.location.reload();
+      window.location.href = '/';
     } catch (error) {
       console.error('Logout failed:', error);
     }
