@@ -11,9 +11,13 @@ import {
   Alert,
   CircularProgress,
   IconButton,
-  Grid
+  Grid,
+  ToggleButtonGroup,
+  ToggleButton
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import PersonIcon from '@mui/icons-material/Person';
+import BusinessIcon from '@mui/icons-material/Business';
 
 interface RegistrationModalProps {
   open: boolean;
@@ -30,6 +34,7 @@ export default function RegistrationModal({ open, onClose, onBackToLogin }: Regi
     lastName: '',
     phoneNumber: '',
     aadhaarNumber: '',
+    confirmAadhaarNumber: '',
     address: '',
     city: '',
     state: '',
@@ -39,6 +44,15 @@ export default function RegistrationModal({ open, onClose, onBackToLogin }: Regi
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  const handleRoleChange = (event: React.MouseEvent<HTMLElement>, newRole: string | null) => {
+    if (newRole !== null) {
+      setFormData(prev => ({
+        ...prev,
+        role: newRole
+      }));
+    }
+  };
 
   const handleChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({
@@ -56,6 +70,13 @@ export default function RegistrationModal({ open, onClose, onBackToLogin }: Regi
     // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
+      setLoading(false);
+      return;
+    }
+
+    // Validate Aadhaar numbers match (if provided)
+    if (formData.aadhaarNumber && formData.aadhaarNumber !== formData.confirmAadhaarNumber) {
+      setError('Aadhaar numbers do not match');
       setLoading(false);
       return;
     }
@@ -106,6 +127,7 @@ export default function RegistrationModal({ open, onClose, onBackToLogin }: Regi
       lastName: '',
       phoneNumber: '',
       aadhaarNumber: '',
+      confirmAadhaarNumber: '',
       address: '',
       city: '',
       state: '',
@@ -134,7 +156,7 @@ export default function RegistrationModal({ open, onClose, onBackToLogin }: Regi
         pb: 1
       }}>
         <Typography variant="h5" component="h2" sx={{ fontWeight: 600 }}>
-          Register as Food Donor
+          Register as {formData.role === 'DONOR' ? 'Food Donor' : 'Food Receiver'}
         </Typography>
         <IconButton onClick={handleClose} size="small">
           <CloseIcon />
@@ -154,6 +176,31 @@ export default function RegistrationModal({ open, onClose, onBackToLogin }: Regi
               {success}
             </Alert>
           )}
+
+          {/* Role Selection Toggle */}
+          <Box sx={{ mb: 3, display: 'flex', justifyContent: 'center' }}>
+            <ToggleButtonGroup
+              value={formData.role}
+              exclusive
+              onChange={handleRoleChange}
+              aria-label="registration role"
+              sx={{ 
+                '& .MuiToggleButton-root': {
+                  px: 4,
+                  py: 1.5
+                }
+              }}
+            >
+              <ToggleButton value="DONOR" aria-label="donor">
+                <PersonIcon sx={{ mr: 1 }} />
+                Donor
+              </ToggleButton>
+              <ToggleButton value="RECEIVER" aria-label="receiver">
+                <BusinessIcon sx={{ mr: 1 }} />
+                Receiver
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
           
           <Grid container spacing={2}>
             {/* Basic Information */}
@@ -223,7 +270,7 @@ export default function RegistrationModal({ open, onClose, onBackToLogin }: Regi
               </Typography>
             </Grid>
             
-            <Grid size={{ xs: 12, sm: 6 }}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Phone Number"
@@ -239,6 +286,16 @@ export default function RegistrationModal({ open, onClose, onBackToLogin }: Regi
                 value={formData.aadhaarNumber}
                 onChange={handleChange('aadhaarNumber')}
                 helperText="Cannot be changed after approval"
+              />
+            </Grid>
+
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <TextField
+                fullWidth
+                label="Confirm Aadhaar Number"
+                value={formData.confirmAadhaarNumber}
+                onChange={handleChange('confirmAadhaarNumber')}
+                helperText="Re-enter Aadhaar for verification"
               />
             </Grid>
 
