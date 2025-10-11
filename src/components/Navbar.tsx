@@ -23,7 +23,7 @@ const superAdminLinks = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/donors", label: "Donors" },
   { href: "/admin/receivers", label: "Receivers" },
-  { href: "/admin/donation-sessions", label: "Donation Sessions" },
+  { href: "/admin/donation-sessions", label: "Sessions" },
 ];
 
 // DONOR links
@@ -213,9 +213,6 @@ export default function Navbar() {
         open={Boolean(profileMenuAnchor)}
         onClose={handleProfileMenuClose}
       >
-        <MenuItem component={Link} href={getDashboardLink()} onClick={handleProfileMenuClose}>
-          Dashboard
-        </MenuItem>
         <MenuItem component={Link} href="/profile" onClick={handleProfileMenuClose}>
           Profile
         </MenuItem>
