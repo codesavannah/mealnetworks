@@ -13,7 +13,9 @@ import CircularProgress from "@mui/material/CircularProgress";
 const donationSchema = z.object({
   // Address/Pickup Location
   address: z.string().min(10, "Complete address is required"),
+  taluka: z.string().min(2, "Taluka is required"),
   city: z.string().min(2, "City is required"),
+  state: z.string().min(2, "State is required"),
   pincode: z.string().regex(/^[1-9][0-9]{5}$/, "Enter valid 6-digit pincode"),
   
   // Food Details
@@ -141,6 +143,20 @@ export default function MakeDonationPage() {
               
               <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 3 }}>
                 <Controller
+                  name="taluka"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label="Taluka"
+                      error={!!errors.taluka}
+                      helperText={errors.taluka?.message}
+                    />
+                  )}
+                />
+                
+                <Controller
                   name="city"
                   control={control}
                   render={({ field }) => (
@@ -150,6 +166,22 @@ export default function MakeDonationPage() {
                       label="City"
                       error={!!errors.city}
                       helperText={errors.city?.message}
+                    />
+                  )}
+                />
+              </Box>
+
+              <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 3 }}>
+                <Controller
+                  name="state"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label="State"
+                      error={!!errors.state}
+                      helperText={errors.state?.message}
                     />
                   )}
                 />
