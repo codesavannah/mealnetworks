@@ -8,6 +8,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import MainContainer from "@/components/MainContainer";
+import RegistrationModal from "@/components/RegistrationModal";
 
 const donationSchema = z.object({
   // Donor Information
@@ -46,6 +47,7 @@ const pickupTimeOptions = ["Morning (8 AM - 12 PM)", "Afternoon (12 PM - 4 PM)",
 export default function DonationPage() {
   const [selectedFoodTypes, setSelectedFoodTypes] = useState<string[]>([]);
   const [submitStatus, setSubmitStatus] = useState<string | null>(null);
+  const [registrationModalOpen, setRegistrationModalOpen] = useState(false);
   
   const { control, handleSubmit, formState: { errors }, setValue } = useForm<DonationFormData>({
     resolver: zodResolver(donationSchema),
@@ -70,9 +72,32 @@ export default function DonationPage() {
 
   return (
     <MainContainer>
-      <Typography variant="h3" gutterBottom>
-        Donate Food
-      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography variant="h3" gutterBottom>
+          Donate Food
+        </Typography>
+        
+        {/* Apply for Donor Button */}
+        <Button
+          variant="contained"
+          color="secondary"
+          size="large"
+          onClick={() => setRegistrationModalOpen(true)}
+          sx={{ 
+            px: 3, 
+            py: 1.5,
+            fontSize: '1rem',
+            fontWeight: 600,
+            borderRadius: 2,
+            boxShadow: 2,
+            '&:hover': {
+              boxShadow: 4
+            }
+          }}
+        >
+          Apply for Donor
+        </Button>
+      </Box>
       
       <Paper sx={{ p: 4, mt: 2 }}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -474,6 +499,13 @@ export default function DonationPage() {
           </form>
         </LocalizationProvider>
       </Paper>
+
+      {/* Registration Modal */}
+      <RegistrationModal 
+        open={registrationModalOpen}
+        onClose={() => setRegistrationModalOpen(false)}
+        onBackToLogin={() => setRegistrationModalOpen(false)}
+      />
     </MainContainer>
   );
 }

@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -13,103 +14,138 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Donation {
-  id                  String   @id @default(cuid())
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
-
-  // Donor Information
-  donorName           String
-  phone               String
-  email               String?
-  aadhaarNumber       String?
-  addressLine         String
-  city                String?
-  pincode             String?
-  geoLat              Float?   // optional if using map picker
-  geoLng              Float?
-
-  // Food Details
-  foodTypes           String   // CSV or JSON string of types (Cooked, Raw, etc.)
-  numberOfItems       Int?
-  description         String?
-  quantityServings    Int?
-  preparedAt          DateTime?
-  expiresAt           DateTime?
-
-  // Logistics
-  preferredPickupSlot String?  // Morning | Afternoon | Evening | ASAP
-  deliveryPossible    Boolean  @default(false)
-  specialInstructions String?
-
-  // Verification & Consent
-  photoUrl            String?  // stored in Vercel Blob
-  safetyConfirmed     Boolean  @default(false)
-  acceptedTerms       Boolean  @default(false)
-
-  // System
-  referenceCode       String   @unique
+// User Roles Enum
+enum UserRole {
+  SUPERADMIN
+  DONOR
+  RECEIVER
 }
 
-model NGO {
-  id                  String   @id @default(cuid())
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
-
-  // Organization Info
-  name                String
-  registrationNumber  String?
-  establishedYear     Int?
-  orgType             String   // NGO | Ashram | Charitable Trust | Other
-  registrationFileUrl String?
-
-  // Contact Details
-  contactPerson       String
-  contactPhone        String
-  contactEmail        String
-  website             String?
-
-  // Location
-  addressLine         String
-  city                String?
-  state               String?
-  pincode             String?
-  geoLat              Float?
-  geoLng              Float?
-
-  // Operational Details
-  serviceAreas        String?  // CSV/JSON multi-select
-  capacityPerDay      Int?
-  preferredDonations  String?  // CSV/JSON multi-select
-
-  // Verification & Consent
-  idProofUrl          String?
-  logoUrl             String?
-  infoValidityConfirm Boolean   @default(false)
-  acceptedTerms       Boolean   @default(false)
-
-  // System
-  ngoCode             String   @unique
+// User Status Enum
+enum UserStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  BLOCKED
 }
 
-model Review {
-  id          String   @id @default(cuid())
-  createdAt   DateTime @default(now())
-  name        String
-  email       String?
-  role        String   // Donor | NGO | Beneficiary | Other
-  text        String
-  rating      Int      // 1..5
-  approved    Boolean  @default(true) // default approved for seeded samples
+// Donation Session Status Enum
+enum SessionStatus {
+  PENDING
+  ACTIVE
+  COMPLETED
+  CANCELLED
 }
 
-model ContactMessage {
-  id          String   @id @default(cuid())
-  createdAt   DateTime @default(now())
-  name        String
-  email       String
-  phone       String?
-  subject     String
-  message     String
-  handled     Boolean  @default(false)
+// User Model
+model User {
+  id                String            @id @default(cuid())
+  email             String            @unique
+  password          String
+  role              UserRole
+  status            UserStatus        @default(PENDING)
+  
+  // Profile Information
+  firstName         String
+  lastName          String
+  phoneNumber       String?
+  aadhaarNumber     String?           // Cannot be changed after approval
+  address           String?
+  city              String?
+  state             String?
+  pincode           String?
+  latitude          Float?            // For location-based matching
+  longitude         Float?            // For location-based matching
+  
+  // Timestamps
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  approvedAt        DateTime?
+  
+  // Relations
+  donorSessions     DonationSession[] @relation("DonorSessions")
+  receiverSessions  DonationSession[] @relation("ReceiverSessions")
+  passwordResets    PasswordReset[]
+  phoneChangeReqs   PhoneChangeRequest[]
+  
+  @@map("users")
+}
+
+// Donation Session Model
+model DonationSession {
+  id                String            @id @default(cuid())
+  sessionId         String            @unique // Human-readable unique ID for tracking
+  
+  // Participants
+  donorId           String
+  receiverId        String
+  donor             User              @relation("DonorSessions", fields: [donorId], references: [id])
+  receiver          User              @relation("ReceiverSessions", fields: [receiverId], references: [id])
+  
+  // Session Details
+  status            SessionStatus     @default(PENDING)
+  foodDescription   String?
+  quantity          String?
+  notes             String?
+  
+  // Location Data
+  donorLatitude     Float?
+  donorLongitude    Float?
+  receiverLatitude  Float?
+  receiverLongitude Float?
+  
+  // Timestamps
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  startedAt         DateTime?
+  completedAt       DateTime?
+  cancelledAt       DateTime?
+  
+  @@map("donation_sessions")
+}
+
+// Password Reset Requests Model
+model PasswordReset {
+  id                String            @id @default(cuid())
+  userId            String
+  user              User              @relation(fields: [userId], references: [id])
+  
+  reason            String?
+  isResolved        Boolean           @default(false)
+  resolvedBy        String?           // SUPERADMIN who resolved it
+  
+  createdAt         DateTime          @default(now())
+  resolvedAt        DateTime?
+  
+  @@map("password_resets")
+}
+
+// Phone Number Change Requests Model
+model PhoneChangeRequest {
+  id                String            @id @default(cuid())
+  userId            String
+  user              User              @relation(fields: [userId], references: [id])
+  
+  oldPhoneNumber    String?
+  newPhoneNumber    String
+  isApproved        Boolean?          // null = pending, true = approved, false = rejected
+  approvedBy        String?           // SUPERADMIN who approved/rejected
+  
+  createdAt         DateTime          @default(now())
+  processedAt       DateTime?
+  
+  @@map("phone_change_requests")
+}
+
+// Audit Trail for Admin Actions
+model AdminAction {
+  id                String            @id @default(cuid())
+  adminId           String            // SUPERADMIN user ID
+  targetUserId      String?           // User being acted upon
+  action            String            // "APPROVE_USER", "BLOCK_USER", "ENABLE_USER", etc.
+  details           String?           // Additional details about the action
+  
+  createdAt         DateTime          @default(now())
+  
+  @@map("admin_actions")
 }
