@@ -82,12 +82,6 @@ export default function ProfilePage() {
         </Alert>
       )}
 
-      {success && (
-        <Alert severity="success" sx={{ mb: 2 }}>
-          {success}
-        </Alert>
-      )}
-
       <Paper sx={{ p: 3 }}>
         <Typography variant="h5" gutterBottom>
           Account Information
