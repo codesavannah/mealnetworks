@@ -19,7 +19,7 @@ const donationSchema = z.object({
   pincode: z.string().regex(/^[1-9][0-9]{5}$/, "Enter valid 6-digit pincode"),
   
   // Food Details
-  foodPackaging: z.enum(["unpacked", "packed"], { message: "Select food packaging type" }),
+  foodPackaging: z.enum(["unpacked_bulk", "packed_bulk", "portioned"], { message: "Select food packaging type" }),
   foodTypes: z.array(z.string()).min(1, "Select at least one food type"),
   numberOfItems: z.number().min(1, "Number of items required"),
   foodDescription: z.string().min(5, "Food description is required"),
@@ -56,7 +56,7 @@ export default function MakeDonationPage() {
       safetyConfirm: false,
       termsAccept: false,
       foodTypes: [],
-      foodPackaging: "unpacked",
+      foodPackaging: "unpacked_bulk",
     }
   });
 
@@ -217,8 +217,9 @@ export default function MakeDonationPage() {
                   <FormControl component="fieldset" error={!!errors.foodPackaging}>
                     <FormLabel component="legend">Food Packaging Type *</FormLabel>
                     <RadioGroup {...field} row>
-                      <FormControlLabel value="unpacked" control={<Radio />} label="Unpacked Cooked Food" />
-                      <FormControlLabel value="packed" control={<Radio />} label="Packed Cooked Food" />
+                      <FormControlLabel value="unpacked_bulk" control={<Radio />} label="Unpacked / Bulk" />
+                      <FormControlLabel value="packed_bulk" control={<Radio />} label="Packed / Bulk" />
+                      <FormControlLabel value="portioned" control={<Radio />} label="Portioned" />
                     </RadioGroup>
                     {errors.foodPackaging && (
                       <Typography variant="caption" color="error" sx={{ mt: 1 }}>
