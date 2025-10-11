@@ -129,7 +129,7 @@ export default function DonorDashboard() {
             No donation sessions yet.
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-            Click on "Make Donation" to start your first donation!
+            Click on &quot;Make Donation&quot; to start your first donation!
           </Typography>
         </Box>
       </Paper>

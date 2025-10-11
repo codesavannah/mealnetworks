@@ -5,7 +5,6 @@ import {
   Paper,
   Box,
   TextField,
-  Button,
   Alert,
   CircularProgress,
   Grid
@@ -31,7 +30,6 @@ export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
 
   useEffect(() => {
     fetchProfile();
