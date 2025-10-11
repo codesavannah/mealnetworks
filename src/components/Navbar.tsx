@@ -7,7 +7,8 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useState, useEffect } from "react";
 import LoginModal from "./LoginModal";
 
-const links = [
+// Public links (for non-authenticated users)
+const publicLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/donation", label: "Donation" },
@@ -15,6 +16,28 @@ const links = [
   { href: "/reviews", label: "What People Say" },
   { href: "/initiative", label: "Initiative" },
   { href: "/contact", label: "Contact Us" },
+];
+
+// SUPERADMIN links
+const superAdminLinks = [
+  { href: "/admin", label: "Dashboard" },
+  { href: "/admin/donors", label: "Donors" },
+  { href: "/admin/receivers", label: "Receivers" },
+  { href: "/admin/donation-sessions", label: "Donation Sessions" },
+];
+
+// DONOR links
+const donorLinks = [
+  { href: "/donor", label: "Dashboard" },
+  { href: "/donor/donate", label: "Make Donation" },
+  { href: "/donor/history", label: "My Donations" },
+];
+
+// RECEIVER links
+const receiverLinks = [
+  { href: "/receiver", label: "Dashboard" },
+  { href: "/receiver/requests", label: "Food Requests" },
+  { href: "/receiver/history", label: "Received Donations" },
 ];
 
 interface User {
@@ -77,12 +100,26 @@ export default function Navbar() {
     }
   };
 
+  // Get appropriate links based on user role
+  const getNavigationLinks = () => {
+    if (!user) return publicLinks;
+    
+    switch (user.role) {
+      case 'SUPERADMIN': return superAdminLinks;
+      case 'DONOR': return donorLinks;
+      case 'RECEIVER': return receiverLinks;
+      default: return publicLinks;
+    }
+  };
+
+  const links = getNavigationLinks();
+
   return (
     <>
       <AppBar position="fixed" color="primary" sx={{ zIndex: 1201 }}>
         <Box sx={{ maxWidth: "1200px", mx: "auto", width: "100%" }}>
           <Toolbar sx={{ display: "flex", justifyContent: "space-between", px: { xs: 2, md: 0 } }}>
-              <Box component={Link} href="/" sx={{ display: "flex", alignItems: "center", textDecoration: "none", gap: 2 }}>
+              <Box component={Link} href={user ? getDashboardLink() : "/"} sx={{ display: "flex", alignItems: "center", textDecoration: "none", gap: 2 }}>
                 <Image
                   src="/images/logo.png"
                   alt="SajhaThali"
