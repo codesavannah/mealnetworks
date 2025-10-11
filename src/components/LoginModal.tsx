@@ -164,7 +164,7 @@ export default function LoginModal({ open, onClose }: LoginModalProps) {
                     '&:hover': { textDecoration: 'underline' }
                   }}
                 >
-                  Register as Donor
+                  Register as Donor / Receiver
                 </Link>
               </Typography>
             </Box>
