@@ -14,19 +14,18 @@ import {
   IconButton
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import RegistrationModal from './RegistrationModal';
 
 interface LoginModalProps {
   open: boolean;
   onClose: () => void;
+  onRegisterClick?: () => void;
 }
 
-export default function LoginModal({ open, onClose }: LoginModalProps) {
+export default function LoginModal({ open, onClose, onRegisterClick }: LoginModalProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [registrationModalOpen, setRegistrationModalOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,24 +77,21 @@ export default function LoginModal({ open, onClose }: LoginModalProps) {
   };
 
   const handleRegistrationClick = () => {
-    setRegistrationModalOpen(true);
-  };
-
-  const handleRegistrationClose = () => {
-    setRegistrationModalOpen(false);
+    if (onRegisterClick) {
+      onRegisterClick();
+    }
   };
 
   return (
-    <>
-      <Dialog 
-        open={open} 
-        onClose={handleClose}
-        maxWidth="sm"
-        fullWidth
-        PaperProps={{
-          sx: { borderRadius: 2 }
-        }}
-      >
+    <Dialog 
+      open={open} 
+      onClose={handleClose}
+      maxWidth="sm"
+      fullWidth
+      PaperProps={{
+        sx: { borderRadius: 2 }
+      }}
+    >
         <DialogTitle sx={{ 
           display: 'flex', 
           justifyContent: 'space-between', 
@@ -201,16 +197,6 @@ export default function LoginModal({ open, onClose }: LoginModalProps) {
             </Box>
           </Box>
         </DialogContent>
-      </Dialog>
-
-      {/* Registration Modal */}
-      <RegistrationModal 
-        open={registrationModalOpen}
-        onClose={handleRegistrationClose}
-        onBackToLogin={() => {
-          setRegistrationModalOpen(false);
-        }}
-      />
-    </>
+    </Dialog>
   );
 }
