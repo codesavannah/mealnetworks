@@ -45,7 +45,7 @@ export default function DonorsPage() {
       }
       const data = await response.json();
       // Filter only DONOR users
-      const donorUsers = data.users.filter((u: any) => u.role === 'DONOR');
+      const donorUsers = data.users.filter((u: { role: string }) => u.role === 'DONOR');
       setDonors(donorUsers);
     } catch {
       setError('Failed to load donors');

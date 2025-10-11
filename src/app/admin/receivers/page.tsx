@@ -45,7 +45,7 @@ export default function ReceiversPage() {
       }
       const data = await response.json();
       // Filter only RECEIVER users
-      const receiverUsers = data.users.filter((u: any) => u.role === 'RECEIVER');
+      const receiverUsers = data.users.filter((u: { role: string }) => u.role === 'RECEIVER');
       setReceivers(receiverUsers);
     } catch {
       setError('Failed to load receivers');
