@@ -17,7 +17,7 @@ const donationSchema = z.object({
   pincode: z.string().regex(/^[1-9][0-9]{5}$/, "Enter valid 6-digit pincode"),
   
   // Food Details
-  foodPackaging: z.enum(["unpacked", "packed"], { required_error: "Select food packaging type" }),
+  foodPackaging: z.enum(["unpacked", "packed"], { message: "Select food packaging type" }),
   foodTypes: z.array(z.string()).min(1, "Select at least one food type"),
   numberOfItems: z.number().min(1, "Number of items required"),
   foodDescription: z.string().min(5, "Food description is required"),
