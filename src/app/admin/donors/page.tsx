@@ -12,7 +12,14 @@ import {
   TableRow,
   Chip,
   Alert,
-  CircularProgress
+  CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Grid,
+  Divider
 } from '@mui/material';
 import MainContainer from '@/components/MainContainer';
 
@@ -28,10 +35,23 @@ interface Donor {
   createdAt: string;
 }
 
+interface DonorDetails extends Donor {
+  aadhaarNumber: string | null;
+  address: string | null;
+  pincode: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  approvedAt: string | null;
+  updatedAt: string;
+}
+
 export default function DonorsPage() {
   const [donors, setDonors] = useState<Donor[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [selectedDonor, setSelectedDonor] = useState<DonorDetails | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [loadingDetails, setLoadingDetails] = useState(false);
 
   useEffect(() => {
     fetchDonors();
@@ -52,6 +72,32 @@ export default function DonorsPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const fetchDonorDetails = async (donorId: string) => {
+    setLoadingDetails(true);
+    try {
+      const response = await fetch(`/api/admin/users/${donorId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch donor details');
+      }
+      const data = await response.json();
+      setSelectedDonor(data.user);
+      setModalOpen(true);
+    } catch {
+      setError('Failed to load donor details');
+    } finally {
+      setLoadingDetails(false);
+    }
+  };
+
+  const handleDonorClick = (donorId: string) => {
+    fetchDonorDetails(donorId);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedDonor(null);
   };
 
   const getStatusColor = (status: string) => {
@@ -107,7 +153,20 @@ export default function DonorsPage() {
               {donors.map((donor) => (
                 <TableRow key={donor.id}>
                   <TableCell>
-                    {donor.firstName} {donor.lastName}
+                    <Box
+                      component="span"
+                      onClick={() => handleDonorClick(donor.id)}
+                      sx={{
+                        color: 'primary.main',
+                        cursor: 'pointer',
+                        textDecoration: 'underline',
+                        '&:hover': {
+                          color: 'primary.dark',
+                        },
+                      }}
+                    >
+                      {donor.firstName} {donor.lastName}
+                    </Box>
                   </TableCell>
                   <TableCell>{donor.email}</TableCell>
                   <TableCell>{donor.phoneNumber || 'N/A'}</TableCell>
@@ -138,6 +197,197 @@ export default function DonorsPage() {
           </Typography>
         )}
       </Paper>
+
+      {/* Donor Details Modal */}
+      <Dialog
+        open={modalOpen}
+        onClose={handleCloseModal}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>
+          <Typography variant="h5">Donor Details</Typography>
+        </DialogTitle>
+        <DialogContent dividers>
+          {loadingDetails ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+              <CircularProgress />
+            </Box>
+          ) : selectedDonor ? (
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Typography variant="h6" gutterBottom>
+                  Personal Information
+                </Typography>
+                <Divider sx={{ mb: 2 }} />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Typography variant="body2" color="text.secondary">
+                  First Name
+                </Typography>
+                <Typography variant="body1" fontWeight="medium">
+                  {selectedDonor.firstName}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Typography variant="body2" color="text.secondary">
+                  Last Name
+                </Typography>
+                <Typography variant="body1" fontWeight="medium">
+                  {selectedDonor.lastName}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Typography variant="body2" color="text.secondary">
+                  Email
+                </Typography>
+                <Typography variant="body1" fontWeight="medium">
+                  {selectedDonor.email}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Typography variant="body2" color="text.secondary">
+                  Phone Number
+                </Typography>
+                <Typography variant="body1" fontWeight="medium">
+                  {selectedDonor.phoneNumber || 'N/A'}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Typography variant="body2" color="text.secondary">
+                  Aadhaar Number
+                </Typography>
+                <Typography variant="body1" fontWeight="medium">
+                  {selectedDonor.aadhaarNumber || 'N/A'}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+                  Address Information
+                </Typography>
+                <Divider sx={{ mb: 2 }} />
+              </Grid>
+
+              <Grid item xs={12}>
+                <Typography variant="body2" color="text.secondary">
+                  Address
+                </Typography>
+                <Typography variant="body1" fontWeight="medium">
+                  {selectedDonor.address || 'N/A'}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12} sm={4}>
+                <Typography variant="body2" color="text.secondary">
+                  City
+                </Typography>
+                <Typography variant="body1" fontWeight="medium">
+                  {selectedDonor.city || 'N/A'}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12} sm={4}>
+                <Typography variant="body2" color="text.secondary">
+                  State
+                </Typography>
+                <Typography variant="body1" fontWeight="medium">
+                  {selectedDonor.state || 'N/A'}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={12} sm={4}>
+                <Typography variant="body2" color="text.secondary">
+                  Pincode
+                </Typography>
+                <Typography variant="body1" fontWeight="medium">
+                  {selectedDonor.pincode || 'N/A'}
+                </Typography>
+              </Grid>
+
+              {(selectedDonor.latitude && selectedDonor.longitude) && (
+                <>
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="body2" color="text.secondary">
+                      Latitude
+                    </Typography>
+                    <Typography variant="body1" fontWeight="medium">
+                      {selectedDonor.latitude}
+                    </Typography>
+                  </Grid>
+
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="body2" color="text.secondary">
+                      Longitude
+                    </Typography>
+                    <Typography variant="body1" fontWeight="medium">
+                      {selectedDonor.longitude}
+                    </Typography>
+                  </Grid>
+                </>
+              )}
+
+              <Grid item xs={12}>
+                <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+                  Account Status
+                </Typography>
+                <Divider sx={{ mb: 2 }} />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Typography variant="body2" color="text.secondary">
+                  Status
+                </Typography>
+                <Box sx={{ mt: 1 }}>
+                  <Chip
+                    label={selectedDonor.status}
+                    color={getStatusColor(selectedDonor.status) as 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning'}
+                  />
+                </Box>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Typography variant="body2" color="text.secondary">
+                  Registered On
+                </Typography>
+                <Typography variant="body1" fontWeight="medium">
+                  {new Date(selectedDonor.createdAt).toLocaleString()}
+                </Typography>
+              </Grid>
+
+              {selectedDonor.approvedAt && (
+                <Grid item xs={12} sm={6}>
+                  <Typography variant="body2" color="text.secondary">
+                    Approved On
+                  </Typography>
+                  <Typography variant="body1" fontWeight="medium">
+                    {new Date(selectedDonor.approvedAt).toLocaleString()}
+                  </Typography>
+                </Grid>
+              )}
+
+              <Grid item xs={12} sm={6}>
+                <Typography variant="body2" color="text.secondary">
+                  Last Updated
+                </Typography>
+                <Typography variant="body1" fontWeight="medium">
+                  {new Date(selectedDonor.updatedAt).toLocaleString()}
+                </Typography>
+              </Grid>
+            </Grid>
+          ) : null}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseModal} variant="contained">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </MainContainer>
   );
 }

@@ -4,6 +4,66 @@ import { getUserFromRequest, requireRole } from '../../../../../lib/auth';
 import { sendWelcomeEmail, sendAccountStatusEmail } from '../../../../../lib/email';
 import { UserStatus } from '@prisma/client';
 
+export async function GET(
+  request: NextRequest,
+  context: { params: Promise<{ userId: string }> }
+) {
+  try {
+    const user = await getUserFromRequest(request);
+    
+    if (!requireRole(user, ['SUPERADMIN'])) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 403 }
+      );
+    }
+
+    const { userId } = await context.params;
+
+    // Get full user details
+    const targetUser = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        phoneNumber: true,
+        aadhaarNumber: true,
+        address: true,
+        city: true,
+        state: true,
+        pincode: true,
+        latitude: true,
+        longitude: true,
+        role: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+        approvedAt: true
+      }
+    });
+
+    if (!targetUser) {
+      return NextResponse.json(
+        { error: 'User not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      user: targetUser
+    });
+
+  } catch (error) {
+    console.error('Get user details error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+
 export async function PATCH(
   request: NextRequest,
   context: { params: Promise<{ userId: string }> }
