@@ -18,8 +18,7 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  Divider,
-  Grid2 as Grid
+  Divider
 } from '@mui/material';
 import MainContainer from '@/components/MainContainer';
 
@@ -214,172 +213,165 @@ export default function DonorsPage() {
               <CircularProgress />
             </Box>
           ) : selectedDonor ? (
-            <Grid container spacing={3}>
-              <Grid size={12}>
+            <Box>
+              <Box sx={{ mb: 3 }}>
                 <Typography variant="h6" gutterBottom>
                   Personal Information
                 </Typography>
                 <Divider sx={{ mb: 2 }} />
-              </Grid>
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary">
+                      First Name
+                    </Typography>
+                    <Typography variant="body1" fontWeight="medium">
+                      {selectedDonor.firstName}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary">
+                      Last Name
+                    </Typography>
+                    <Typography variant="body1" fontWeight="medium">
+                      {selectedDonor.lastName}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary">
+                      Email
+                    </Typography>
+                    <Typography variant="body1" fontWeight="medium">
+                      {selectedDonor.email}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary">
+                      Phone Number
+                    </Typography>
+                    <Typography variant="body1" fontWeight="medium">
+                      {selectedDonor.phoneNumber || 'N/A'}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary">
+                      Aadhaar Number
+                    </Typography>
+                    <Typography variant="body1" fontWeight="medium">
+                      {selectedDonor.aadhaarNumber || 'N/A'}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
 
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <Typography variant="body2" color="text.secondary">
-                  First Name
-                </Typography>
-                <Typography variant="body1" fontWeight="medium">
-                  {selectedDonor.firstName}
-                </Typography>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <Typography variant="body2" color="text.secondary">
-                  Last Name
-                </Typography>
-                <Typography variant="body1" fontWeight="medium">
-                  {selectedDonor.lastName}
-                </Typography>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <Typography variant="body2" color="text.secondary">
-                  Email
-                </Typography>
-                <Typography variant="body1" fontWeight="medium">
-                  {selectedDonor.email}
-                </Typography>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <Typography variant="body2" color="text.secondary">
-                  Phone Number
-                </Typography>
-                <Typography variant="body1" fontWeight="medium">
-                  {selectedDonor.phoneNumber || 'N/A'}
-                </Typography>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <Typography variant="body2" color="text.secondary">
-                  Aadhaar Number
-                </Typography>
-                <Typography variant="body1" fontWeight="medium">
-                  {selectedDonor.aadhaarNumber || 'N/A'}
-                </Typography>
-              </Grid>
-
-              <Grid size={12}>
-                <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+              <Box sx={{ mb: 3 }}>
+                <Typography variant="h6" gutterBottom>
                   Address Information
                 </Typography>
                 <Divider sx={{ mb: 2 }} />
-              </Grid>
-
-              <Grid size={12}>
-                <Typography variant="body2" color="text.secondary">
-                  Address
-                </Typography>
-                <Typography variant="body1" fontWeight="medium">
-                  {selectedDonor.address || 'N/A'}
-                </Typography>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <Typography variant="body2" color="text.secondary">
-                  City
-                </Typography>
-                <Typography variant="body1" fontWeight="medium">
-                  {selectedDonor.city || 'N/A'}
-                </Typography>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <Typography variant="body2" color="text.secondary">
-                  State
-                </Typography>
-                <Typography variant="body1" fontWeight="medium">
-                  {selectedDonor.state || 'N/A'}
-                </Typography>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <Typography variant="body2" color="text.secondary">
-                  Pincode
-                </Typography>
-                <Typography variant="body1" fontWeight="medium">
-                  {selectedDonor.pincode || 'N/A'}
-                </Typography>
-              </Grid>
-
-              {(selectedDonor.latitude && selectedDonor.longitude) && (
-                <>
-                  <Grid size={{ xs: 12, sm: 6 }}>
+                <Box sx={{ display: 'grid', gridTemplateColumns: '1fr', gap: 2, mb: 2 }}>
+                  <Box>
                     <Typography variant="body2" color="text.secondary">
-                      Latitude
+                      Address
                     </Typography>
                     <Typography variant="body1" fontWeight="medium">
-                      {selectedDonor.latitude}
+                      {selectedDonor.address || 'N/A'}
                     </Typography>
-                  </Grid>
-
-                  <Grid size={{ xs: 12, sm: 6 }}>
+                  </Box>
+                </Box>
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr 1fr' }, gap: 2 }}>
+                  <Box>
                     <Typography variant="body2" color="text.secondary">
-                      Longitude
+                      City
                     </Typography>
                     <Typography variant="body1" fontWeight="medium">
-                      {selectedDonor.longitude}
+                      {selectedDonor.city || 'N/A'}
                     </Typography>
-                  </Grid>
-                </>
-              )}
+                  </Box>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary">
+                      State
+                    </Typography>
+                    <Typography variant="body1" fontWeight="medium">
+                      {selectedDonor.state || 'N/A'}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary">
+                      Pincode
+                    </Typography>
+                    <Typography variant="body1" fontWeight="medium">
+                      {selectedDonor.pincode || 'N/A'}
+                    </Typography>
+                  </Box>
+                </Box>
+                {(selectedDonor.latitude && selectedDonor.longitude) && (
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2, mt: 2 }}>
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">
+                        Latitude
+                      </Typography>
+                      <Typography variant="body1" fontWeight="medium">
+                        {selectedDonor.latitude}
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">
+                        Longitude
+                      </Typography>
+                      <Typography variant="body1" fontWeight="medium">
+                        {selectedDonor.longitude}
+                      </Typography>
+                    </Box>
+                  </Box>
+                )}
+              </Box>
 
-              <Grid size={12}>
-                <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+              <Box sx={{ mb: 3 }}>
+                <Typography variant="h6" gutterBottom>
                   Account Status
                 </Typography>
                 <Divider sx={{ mb: 2 }} />
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <Typography variant="body2" color="text.secondary">
-                  Status
-                </Typography>
-                <Box sx={{ mt: 1 }}>
-                  <Chip
-                    label={selectedDonor.status}
-                    color={getStatusColor(selectedDonor.status) as 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning'}
-                  />
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary">
+                      Status
+                    </Typography>
+                    <Box sx={{ mt: 1 }}>
+                      <Chip
+                        label={selectedDonor.status}
+                        color={getStatusColor(selectedDonor.status) as 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning'}
+                      />
+                    </Box>
+                  </Box>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary">
+                      Registered On
+                    </Typography>
+                    <Typography variant="body1" fontWeight="medium">
+                      {new Date(selectedDonor.createdAt).toLocaleString()}
+                    </Typography>
+                  </Box>
+                  {selectedDonor.approvedAt && (
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">
+                        Approved On
+                      </Typography>
+                      <Typography variant="body1" fontWeight="medium">
+                        {new Date(selectedDonor.approvedAt).toLocaleString()}
+                      </Typography>
+                    </Box>
+                  )}
+                  <Box>
+                    <Typography variant="body2" color="text.secondary">
+                      Last Updated
+                    </Typography>
+                    <Typography variant="body1" fontWeight="medium">
+                      {new Date(selectedDonor.updatedAt).toLocaleString()}
+                    </Typography>
+                  </Box>
                 </Box>
-              </Grid>
-
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <Typography variant="body2" color="text.secondary">
-                  Registered On
-                </Typography>
-                <Typography variant="body1" fontWeight="medium">
-                  {new Date(selectedDonor.createdAt).toLocaleString()}
-                </Typography>
-              </Grid>
-
-              {selectedDonor.approvedAt && (
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <Typography variant="body2" color="text.secondary">
-                    Approved On
-                  </Typography>
-                  <Typography variant="body1" fontWeight="medium">
-                    {new Date(selectedDonor.approvedAt).toLocaleString()}
-                  </Typography>
-                </Grid>
-              )}
-
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <Typography variant="body2" color="text.secondary">
-                  Last Updated
-                </Typography>
-                <Typography variant="body1" fontWeight="medium">
-                  {new Date(selectedDonor.updatedAt).toLocaleString()}
-                </Typography>
-              </Grid>
-            </Grid>
+              </Box>
+            </Box>
           ) : null}
         </DialogContent>
         <DialogActions>
