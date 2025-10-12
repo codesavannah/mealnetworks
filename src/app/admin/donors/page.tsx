@@ -18,9 +18,9 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  Grid,
   Divider
 } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import MainContainer from '@/components/MainContainer';
 
 interface Donor {
@@ -215,14 +215,14 @@ export default function DonorsPage() {
             </Box>
           ) : selectedDonor ? (
             <Grid container spacing={3}>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <Typography variant="h6" gutterBottom>
                   Personal Information
                 </Typography>
                 <Divider sx={{ mb: 2 }} />
               </Grid>
 
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <Typography variant="body2" color="text.secondary">
                   First Name
                 </Typography>
@@ -231,7 +231,7 @@ export default function DonorsPage() {
                 </Typography>
               </Grid>
 
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <Typography variant="body2" color="text.secondary">
                   Last Name
                 </Typography>
@@ -240,7 +240,7 @@ export default function DonorsPage() {
                 </Typography>
               </Grid>
 
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <Typography variant="body2" color="text.secondary">
                   Email
                 </Typography>
@@ -249,7 +249,7 @@ export default function DonorsPage() {
                 </Typography>
               </Grid>
 
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <Typography variant="body2" color="text.secondary">
                   Phone Number
                 </Typography>
@@ -258,7 +258,7 @@ export default function DonorsPage() {
                 </Typography>
               </Grid>
 
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <Typography variant="body2" color="text.secondary">
                   Aadhaar Number
                 </Typography>
@@ -267,14 +267,14 @@ export default function DonorsPage() {
                 </Typography>
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
                   Address Information
                 </Typography>
                 <Divider sx={{ mb: 2 }} />
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <Typography variant="body2" color="text.secondary">
                   Address
                 </Typography>
@@ -283,7 +283,7 @@ export default function DonorsPage() {
                 </Typography>
               </Grid>
 
-              <Grid item xs={12} sm={4}>
+              <Grid size={{ xs: 12, sm: 4 }}>
                 <Typography variant="body2" color="text.secondary">
                   City
                 </Typography>
@@ -292,7 +292,7 @@ export default function DonorsPage() {
                 </Typography>
               </Grid>
 
-              <Grid item xs={12} sm={4}>
+              <Grid size={{ xs: 12, sm: 4 }}>
                 <Typography variant="body2" color="text.secondary">
                   State
                 </Typography>
@@ -301,7 +301,7 @@ export default function DonorsPage() {
                 </Typography>
               </Grid>
 
-              <Grid item xs={12} sm={4}>
+              <Grid size={{ xs: 12, sm: 4 }}>
                 <Typography variant="body2" color="text.secondary">
                   Pincode
                 </Typography>
@@ -312,7 +312,7 @@ export default function DonorsPage() {
 
               {(selectedDonor.latitude && selectedDonor.longitude) && (
                 <>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={{ xs: 12, sm: 6 }}>
                     <Typography variant="body2" color="text.secondary">
                       Latitude
                     </Typography>
@@ -321,7 +321,7 @@ export default function DonorsPage() {
                     </Typography>
                   </Grid>
 
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={{ xs: 12, sm: 6 }}>
                     <Typography variant="body2" color="text.secondary">
                       Longitude
                     </Typography>
@@ -332,14 +332,14 @@ export default function DonorsPage() {
                 </>
               )}
 
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
                   Account Status
                 </Typography>
                 <Divider sx={{ mb: 2 }} />
               </Grid>
 
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <Typography variant="body2" color="text.secondary">
                   Status
                 </Typography>
@@ -351,7 +351,7 @@ export default function DonorsPage() {
                 </Box>
               </Grid>
 
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <Typography variant="body2" color="text.secondary">
                   Registered On
                 </Typography>
@@ -361,7 +361,7 @@ export default function DonorsPage() {
               </Grid>
 
               {selectedDonor.approvedAt && (
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <Typography variant="body2" color="text.secondary">
                     Approved On
                   </Typography>
@@ -371,7 +371,7 @@ export default function DonorsPage() {
                 </Grid>
               )}
 
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <Typography variant="body2" color="text.secondary">
                   Last Updated
                 </Typography>
