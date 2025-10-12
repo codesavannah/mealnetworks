@@ -18,9 +18,9 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  Divider
+  Divider,
+  Grid2 as Grid
 } from '@mui/material';
-import Grid from '@mui/material/Grid2';
 import MainContainer from '@/components/MainContainer';
 
 interface Donor {
