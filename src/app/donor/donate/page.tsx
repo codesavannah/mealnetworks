@@ -9,6 +9,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import MainContainer from "@/components/MainContainer";
 import CircularProgress from "@mui/material/CircularProgress";
+import dynamic from 'next/dynamic';
+import GoogleMapsProvider from '@/components/GoogleMapsProvider';
+
+// Dynamic import to avoid SSR issues
+const MapLocationPicker = dynamic(
+  () => import('@/components/MapLocationPicker'),
+  { 
+    ssr: false,
+    loading: () => <CircularProgress />
+  }
+);
 
 const donationSchema = z.object({
   // Address/Pickup Location
@@ -17,6 +28,9 @@ const donationSchema = z.object({
   city: z.string().min(2, "City is required"),
   state: z.string().min(2, "State is required"),
   pincode: z.string().regex(/^[1-9][0-9]{5}$/, "Enter valid 6-digit pincode"),
+  latitude: z.number().min(-90).max(90, "Invalid latitude"),
+  longitude: z.number().min(-180).max(180, "Invalid longitude"),
+  formattedAddress: z.string().optional(),
   
   // Food Details
   foodPackaging: z.enum(["unpacked_bulk", "packed_bulk", "portioned"], { message: "Select food packaging type" }),
@@ -48,6 +62,7 @@ export default function MakeDonationPage() {
   const [loading, setLoading] = useState(true);
   const [selectedFoodTypes, setSelectedFoodTypes] = useState<string[]>([]);
   const [submitStatus, setSubmitStatus] = useState<string | null>(null);
+  const [locationError, setLocationError] = useState<string>('');
   
   const { control, handleSubmit, formState: { errors }, setValue } = useForm<DonationFormData>({
     resolver: zodResolver(donationSchema),
@@ -57,6 +72,8 @@ export default function MakeDonationPage() {
       termsAccept: false,
       foodTypes: [],
       foodPackaging: "unpacked_bulk",
+      latitude: 0,
+      longitude: 0,
     }
   });
 
@@ -79,14 +96,28 @@ export default function MakeDonationPage() {
   };
 
   const onSubmit = (data: DonationFormData) => {
+    // Validate location is selected
+    if (!data.latitude || !data.longitude || data.latitude === 0 || data.longitude === 0) {
+      setLocationError('Please select your pickup location on the map');
+      return;
+    }
+    
     console.log("Form submitted:", data);
     setSubmitStatus("Donation submitted successfully! (Frontend only - backend integration pending)");
+    setLocationError('');
   };
 
   const handleFoodTypeChange = (event: { target: { value: string | string[] } }) => {
     const value = event.target.value;
     setSelectedFoodTypes(typeof value === 'string' ? value.split(',') : value);
     setValue('foodTypes', typeof value === 'string' ? value.split(',') : value);
+  };
+
+  const handleLocationSelect = (lat: number, lng: number, address: string) => {
+    setValue('latitude', lat);
+    setValue('longitude', lng);
+    setValue('formattedAddress', address);
+    setLocationError('');
   };
 
   if (loading) {
@@ -124,6 +155,23 @@ export default function MakeDonationPage() {
             </Typography>
             
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mb: 4 }}>
+              {/* Google Maps Location Picker */}
+              <Box>
+                <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 500 }}>
+                  Select Pickup Location on Map *
+                </Typography>
+                <GoogleMapsProvider>
+                  <MapLocationPicker
+                    onLocationSelect={handleLocationSelect}
+                  />
+                </GoogleMapsProvider>
+                {locationError && (
+                  <Alert severity="error" sx={{ mt: 2 }}>
+                    {locationError}
+                  </Alert>
+                )}
+              </Box>
+
               <Controller
                 name="address"
                 control={control}
@@ -136,7 +184,7 @@ export default function MakeDonationPage() {
                     label="Address / Pickup Location"
                     placeholder="Enter complete pickup address"
                     error={!!errors.address}
-                    helperText={errors.address?.message || "Google Maps integration will be added later"}
+                    helperText={errors.address?.message || "This will be auto-filled from the map or you can enter manually"}
                   />
                 )}
               />

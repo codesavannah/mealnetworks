@@ -124,6 +124,43 @@ Implementation of a role-based authentication system for the food donation platf
 - **Distance-Based Matching**: RECEIVERs displayed to DONORs based on nearest distance
 - **Location Services**: Both DONOR and RECEIVER profiles include location information
 
+#### Location Data Collection
+- **RECEIVER Location (Mandatory)**:
+  - During RECEIVER (NGO) registration, Google Maps integration is **required**
+  - User must select their organization's physical location on Google Maps
+  - System captures and stores:
+    - **Latitude** (decimal degrees)
+    - **Longitude** (decimal degrees)
+    - **Formatted Address** (from Google Maps geocoding)
+  - Location data is stored in the User table (latitude, longitude fields)
+  - This location becomes the pickup/delivery point for donations
+  - Location accuracy is critical for distance-based matching with DONORs
+
+- **DONOR Location (Optional)**:
+  - DONORs may provide location during registration for convenience
+  - Can be updated or provided later when creating donation sessions
+  - Not mandatory at registration time
+
+#### Google Maps Implementation Requirements
+- **Map Selector Component**:
+  - Interactive Google Maps embedded in RECEIVER registration form
+  - Drag-and-drop marker to select exact location
+  - Search functionality to find address
+  - Auto-complete for address input
+  - "Use Current Location" button (browser geolocation)
+  - Visual confirmation of selected location before submission
+
+- **Geocoding Integration**:
+  - Convert address text to coordinates (forward geocoding)
+  - Convert coordinates to formatted address (reverse geocoding)
+  - Validate location is within serviceable area (if applicable)
+
+- **Data Validation**:
+  - Ensure latitude/longitude are valid coordinates
+  - Check if coordinates fall within expected geographic boundaries
+  - Prevent submission if location is not selected
+  - Store original address text along with coordinates for reference
+
 ### Donation Session Concept
 - **Definition**: A donation session is a singular entity representing one complete donation transaction
 - **Participants**: Each session connects one DONOR with one RECEIVER
@@ -200,9 +237,25 @@ Implementation of a role-based authentication system for the food donation platf
 
 ### RECEIVER Registration Process
 1. **Integration with Existing NGO System**: Uses current NGO registration flow
-2. **Registration Form**: Existing NGO registration form
-3. **Account Creation**: Creates user account with role "RECEIVER" in "PENDING" status
-4. **Approval Process**: Same workflow as DONOR approval
+2. **Registration Form**: NGO registration form with additional requirements:
+   - **Basic Organization Information**: Name, registration number, type, contact details
+   - **Contact Person Details**: Name, phone, email
+   - **Address Information**: Complete address with city, state, pincode
+   - **Google Maps Location (Required)**:
+     - Interactive map selector to pinpoint exact organization location
+     - System captures latitude and longitude coordinates
+     - Validates location is selected before form submission
+     - Location becomes the default pickup/delivery point for donations
+   - **Service Details**: Service areas, capacity, preferred donation types
+   - **Verification Documents**: Registration certificates, ID proof uploads
+3. **Location Data Validation**:
+   - System ensures latitude/longitude coordinates are captured
+   - Validates coordinates are within valid geographic range
+   - Prevents registration completion without location data
+4. **Account Creation**: Creates user account with role "RECEIVER" in "PENDING" status
+   - Location data (latitude, longitude) stored in User table
+5. **Approval Process**: Same workflow as DONOR approval
+   - SUPERADMIN can view organization location on map during approval
 
 ### General Registration Process
 1. User accesses registration page (DONOR or RECEIVER)
@@ -225,8 +278,15 @@ Implementation of a role-based authentication system for the food donation platf
 - **User status tracking** (PENDING, APPROVED, REJECTED, BLOCKED)
 - **Session management**
 - **Approval audit trail**
-- **Location data storage** for map integration
+- **Location data storage** for map integration:
+  - **latitude** field (Float, nullable for DONORs, required for RECEIVERs)
+  - **longitude** field (Float, nullable for DONORs, required for RECEIVERs)
+  - Stored in User table for both DONOR and RECEIVER
+  - RECEIVER location is mandatory and captured during registration
+  - DONOR location is optional, can be provided during session creation
+  - Used for distance-based matching and map visualization
 - **Donation session tables** with unique session IDs
+  - Includes location snapshots (donor/receiver lat/long at time of session)
 - **DONOR-RECEIVER relationship tracking**
 - **Historical donation data storage**
 
@@ -237,6 +297,13 @@ Implementation of a role-based authentication system for the food donation platf
   - Registration link to switch to registration modal
   - "Forgot Password" link (sends request to SUPERADMIN)
 - **Registration Modal**: Can be accessed from login modal or donation page
+  - **RECEIVER Registration Enhancement**: Includes Google Maps location selector
+  - **Location Picker Component**: 
+    - Embedded Google Maps with interactive marker
+    - Address search and autocomplete functionality
+    - "Use Current Location" geolocation feature
+    - Visual preview of selected location
+    - Mandatory field validation for RECEIVER registration
 - **Unified Login Form**: Single form handling all user types
 - **Role-Based Navigation** (✓ Implemented):
   - Dynamic navbar links based on user authentication and role
@@ -276,11 +343,18 @@ Implementation of a role-based authentication system for the food donation platf
   - Send welcome emails after approval
   - Send session notification emails
   - Send account status change emails
-- **Map/Location services**: location-based RECEIVER discovery
+- **Map/Location services**: 
+  - **Location validation**: Validate latitude/longitude coordinates
+  - **Geocoding endpoints**: Address to coordinates conversion (optional, can use Google Maps API directly)
+  - **Reverse geocoding**: Coordinates to formatted address
+  - **Distance calculation**: Calculate distance between DONOR and RECEIVER locations
+  - **Nearby RECEIVER search**: Find RECEIVERs within specified radius
+  - **Location-based RECEIVER discovery** for DONORs
 - **Donation session endpoints**: 
   - Create, read, update donation sessions
   - Generate unique session IDs
   - Session tracking and search functionality
+  - Associate location data with each session
 - **Historical data endpoints**: 
   - DONOR donation history
   - RECEIVER received donations history
@@ -307,6 +381,19 @@ Implementation of a role-based authentication system for the food donation platf
 4. **Gmail Account Setup**: Should we create a dedicated Gmail account for the application or use an existing one?
 5. **Email Template Design**: What should be the visual design and branding for email templates?
 6. **Email Delivery Monitoring**: Should we implement email delivery tracking and failure handling?
+7. **Google Maps API Configuration**:
+   - Do we have a Google Cloud account with Maps API enabled?
+   - Should we restrict the API key to specific domains/IP addresses?
+   - What API usage limits should be set to stay within free tier?
+   - Should we implement API call caching to reduce costs?
+8. **Location Data Privacy**:
+   - Should RECEIVER exact locations be visible to all DONORs or only during active sessions?
+   - Should we implement location obfuscation (show approximate area instead of exact coordinates)?
+   - How precise should the location marker be (building-level vs. area-level accuracy)?
+9. **Geographic Boundaries**:
+   - Should we restrict RECEIVER registration to specific regions/countries?
+   - What should happen if location coordinates fall outside expected boundaries?
+   - Should we support international locations or limit to specific geographic area?
 
 ## Current Codebase Integration
 
@@ -318,9 +405,18 @@ Implementation of a role-based authentication system for the food donation platf
 
 ### New Components Needed
 - **LoginModal.tsx** (✓ Implemented) - Modal component for unified login with registration link
-- **RegistrationModal.tsx** (✓ Implemented) - Modal for DONOR registration
+- **RegistrationModal.tsx** (✓ Implemented) - Modal for DONOR and RECEIVER registration with role toggle
 - **ForgotPasswordModal.tsx** - Password reset request form
+- **MapLocationPicker.tsx** - Google Maps location selector for RECEIVER registration
+  - Interactive map with draggable marker
+  - Address search and autocomplete
+  - Geolocation support ("Use Current Location")
+  - Coordinate validation and display
+  - Required component within RECEIVER registration flow
 - **MapComponent.tsx** - Location-based RECEIVER discovery for DONORs
+  - Display multiple RECEIVER locations on map
+  - Distance calculation and filtering
+  - Clickable markers with RECEIVER information
 - **Email Service Module** - Centralized email sending logic with Nodemailer
   - **EmailTemplates** - HTML templates for different email scenarios
   - **EmailService.ts** - SMTP configuration and email sending functions
