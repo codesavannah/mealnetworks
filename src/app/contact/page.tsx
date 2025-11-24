@@ -14,6 +14,8 @@ export default function ContactPage() {
             <Typography sx={{ mt: 1 }}>Phone:</Typography>
             <Typography>Rutuja B. Bhosle         +91 93736 75683</Typography>
             <Typography>Sanjana S. Nikam       +91 84858 34335</Typography>
+            <Typography>Shweta Rathod          +91 73879 85971</Typography>
+            <Typography>Amruta Sagre           +91 88568 08106</Typography>
             <Typography>Email: sajhathali@gmail.com</Typography>
           </Paper>
         </Box>
