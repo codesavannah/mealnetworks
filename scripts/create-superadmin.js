@@ -17,12 +17,16 @@ async function createSuperAdmin() {
 
     if (existingAdmin) {
       console.log('SUPERADMIN already exists:', existingAdmin.email);
-      // Update password to ensure it's known
+      // Update both email and password to ensure consistency
       const hashedPassword = await hashPassword('admin123');
       await prisma.user.update({
-        where: { email: 'admin@mealnetworks.com' },
-        data: { password: hashedPassword }
+        where: { id: existingAdmin.id },
+        data: { 
+          email: 'admin@mealnetworks.com',
+          password: hashedPassword 
+        }
       });
+      console.log('Email updated to: admin@mealnetworks.com');
       console.log('Password reset to: admin123');
       return;
     }
