@@ -11,9 +11,12 @@ import {
   Alert,
   Link,
   CircularProgress,
-  IconButton
+  IconButton,
+  InputAdornment
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 interface LoginModalProps {
   open: boolean;
@@ -24,6 +27,7 @@ interface LoginModalProps {
 export default function LoginModal({ open, onClose, onRegisterClick }: LoginModalProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -51,7 +55,7 @@ export default function LoginModal({ open, onClose, onRegisterClick }: LoginModa
       // Success - redirect to appropriate dashboard based on role
       onClose();
       const userRole = data.user?.role;
-      
+
       if (userRole === 'SUPERADMIN') {
         window.location.href = '/admin';
       } else if (userRole === 'DONOR') {
@@ -83,8 +87,8 @@ export default function LoginModal({ open, onClose, onRegisterClick }: LoginModa
   };
 
   return (
-    <Dialog 
-      open={open} 
+    <Dialog
+      open={open}
       onClose={handleClose}
       maxWidth="sm"
       fullWidth
@@ -92,111 +96,124 @@ export default function LoginModal({ open, onClose, onRegisterClick }: LoginModa
         sx: { borderRadius: 2 }
       }}
     >
-        <DialogTitle sx={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          pb: 1
-        }}>
-          <Typography variant="h5" component="h2" sx={{ fontWeight: 600 }}>
-            Login to Your Account
-          </Typography>
-          <IconButton onClick={handleClose} size="small">
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        
-        <DialogContent>
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-            {error && (
-              <Alert severity="error" sx={{ mb: 2 }}>
-                {error}
-              </Alert>
+      <DialogTitle sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        pb: 1
+      }}>
+        <Typography variant="h5" component="h2" sx={{ fontWeight: 600 }}>
+          Login to Your Account
+        </Typography>
+        <IconButton onClick={handleClose} size="small">
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+
+      <DialogContent>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
+
+          <TextField
+            fullWidth
+            label="Email Address"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            margin="normal"
+            autoComplete="email"
+            autoFocus
+          />
+
+          <TextField
+            fullWidth
+            label="Password"
+            type={showPassword ? 'text' : 'password'}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            margin="normal"
+            autoComplete="current-password"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
+          />
+
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            disabled={loading}
+            sx={{
+              mt: 3,
+              mb: 2,
+              py: 1.5,
+              fontSize: '1.1rem',
+              position: 'relative'
+            }}
+          >
+            {loading ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              'Login'
             )}
-            
-            <TextField
-              fullWidth
-              label="Email Address"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              margin="normal"
-              autoComplete="email"
-              autoFocus
-            />
-            
-            <TextField
-              fullWidth
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              margin="normal"
-              autoComplete="current-password"
-            />
+          </Button>
 
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              disabled={loading}
-              sx={{ 
-                mt: 3, 
-                mb: 2, 
-                py: 1.5,
-                fontSize: '1.1rem',
-                position: 'relative'
-              }}
-            >
-              {loading ? (
-                <CircularProgress size={24} color="inherit" />
-              ) : (
-                'Login'
-              )}
-            </Button>
-
-            <Box sx={{ textAlign: 'center', mt: 2 }}>
-              <Typography variant="body2" color="text.secondary">
-                Don&apos;t have an account?{' '}
-                <Link
-                  component="button"
-                  type="button"
-                  onClick={handleRegistrationClick}
-                  sx={{ 
-                    cursor: 'pointer',
-                    textDecoration: 'none',
-                    '&:hover': { textDecoration: 'underline' }
-                  }}
-                >
-                  Register as Donor / Receiver
-                </Link>
-              </Typography>
-            </Box>
-
-            <Box sx={{ textAlign: 'center', mt: 1 }}>
-              <Typography variant="body2" color="text.secondary">
-                Forgot your password?{' '}
-                <Link
-                  component="button"
-                  type="button"
-                  onClick={() => {
-                    // TODO: Implement forgot password functionality
-                    alert('Please contact support for password reset.');
-                  }}
-                  sx={{ 
-                    cursor: 'pointer',
-                    textDecoration: 'none',
-                    '&:hover': { textDecoration: 'underline' }
-                  }}
-                >
-                  Contact Support
-                </Link>
-              </Typography>
-            </Box>
+          <Box sx={{ textAlign: 'center', mt: 2 }}>
+            <Typography variant="body2" color="text.secondary">
+              Don&apos;t have an account?{' '}
+              <Link
+                component="button"
+                type="button"
+                onClick={handleRegistrationClick}
+                sx={{
+                  cursor: 'pointer',
+                  textDecoration: 'none',
+                  '&:hover': { textDecoration: 'underline' }
+                }}
+              >
+                Register as Donor / Receiver
+              </Link>
+            </Typography>
           </Box>
-        </DialogContent>
+
+          <Box sx={{ textAlign: 'center', mt: 1 }}>
+            <Typography variant="body2" color="text.secondary">
+              Forgot your password?{' '}
+              <Link
+                component="button"
+                type="button"
+                onClick={() => {
+                  // TODO: Implement forgot password functionality
+                  alert('Please contact support for password reset.');
+                }}
+                sx={{
+                  cursor: 'pointer',
+                  textDecoration: 'none',
+                  '&:hover': { textDecoration: 'underline' }
+                }}
+              >
+                Contact Support
+              </Link>
+            </Typography>
+          </Box>
+        </Box>
+      </DialogContent>
     </Dialog>
   );
 }
