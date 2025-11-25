@@ -19,11 +19,7 @@ export default function ContactPage() {
             <Typography>Email: mealnetworks@gmail.com</Typography>
           </Paper>
         </Box>
-        <Box sx={{ width: "100%" }}>
-          <Paper sx={{ p: 2 }}>
-            <Typography>Inquiry form placeholder. Google Maps embed will appear here.</Typography>
-          </Paper>
-        </Box>
+
       </Box>
     </MainContainer>
   );
