@@ -121,7 +121,7 @@ export default function Navbar() {
           <Toolbar sx={{ display: "flex", justifyContent: "space-between", px: { xs: 2, md: 0 } }}>
             <Box component={Link} href={user ? getDashboardLink() : "/"} sx={{ display: "flex", alignItems: "center", textDecoration: "none", gap: 2 }}>
               <Image
-                src="/images/logo.png"
+                src="/images/Logo_MealNetworks3.png"
                 alt="MealNetworks"
                 width={56}
                 height={56}
