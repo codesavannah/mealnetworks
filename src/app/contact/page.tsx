@@ -16,7 +16,7 @@ export default function ContactPage() {
             <Typography>Sanjana S. Nikam       +91 84858 34335</Typography>
             <Typography>Shweta Rathod          +91 73879 85971</Typography>
             <Typography>Amruta Sagre           +91 88568 08106</Typography>
-            <Typography>Email: sajhathali@gmail.com</Typography>
+            <Typography>Email: mealnetworks@gmail.com</Typography>
           </Paper>
         </Box>
         <Box sx={{ width: "100%" }}>

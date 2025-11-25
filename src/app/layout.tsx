@@ -21,7 +21,7 @@ const varelaRound = Varela_Round({
 });
 
 export const metadata: Metadata = {
-  title: "Sajhathali - Food Donation Platform",
+  title: "MealNetworks - Food Donation Platform",
   description: "Connect donors with NGOs to reduce food waste and fight hunger",
 };
 
@@ -32,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-        <body className={`${geistSans.variable} ${geistMono.variable} ${varelaRound.variable}`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${varelaRound.variable}`}>
         <ThemeRegistry>
           <Navbar />
           <main style={{ paddingTop: 64 }}>{children}</main>
